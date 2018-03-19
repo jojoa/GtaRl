@@ -18,8 +18,7 @@ namespace GTARL.models
         [Column("EggID", Order = 2), Required]
         public int EggID { get; set; }
 
-        [Column("user", Order = 3, TypeName = "char"), StringLength(255), Required]
-        public string Name { get; set; }
+        
 
      
 

@@ -30,7 +30,7 @@ namespace GTARL.models
 
         public DbSet<EggModel> Eggs { get; set; }
 
-        public DbSet<EggFoundModel> EggFound { get; set; }
+        ////public DbSet<EggFoundModel> EggFound { get; set; }
 
 
     }

@@ -32,6 +32,9 @@ namespace GTARL.models
 
         [Column("rotz", Order = 7), Required]
         public float RotationZ { get; set; }
-        
+
+        [Column("user", Order = 8, TypeName = "char"), StringLength(255), Required]
+        public string User { get; set; }
+
     }
 }

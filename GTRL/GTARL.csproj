@@ -70,6 +70,10 @@
     <Compile Include="Migrations\201803191555065_init.Designer.cs">
       <DependentUpon>201803191555065_init.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201803192005188_egg2.1.cs" />
+    <Compile Include="Migrations\201803192005188_egg2.1.Designer.cs">
+      <DependentUpon>201803192005188_egg2.1.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="models\EggFoundModel.cs" />
     <Compile Include="models\EggModel.cs" />
@@ -116,6 +120,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201803191555065_init.resx">
       <DependentUpon>201803191555065_init.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201803192005188_egg2.1.resx">
+      <DependentUpon>201803192005188_egg2.1.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
