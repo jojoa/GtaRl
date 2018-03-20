@@ -1,6 +1,7 @@
 ﻿using GrandTheftMultiplayer.Server.API;
 using GrandTheftMultiplayer.Server.Elements;
 using GrandTheftMultiplayer.Server.Managers;
+using GrandTheftMultiplayer.Shared;
 using GrandTheftMultiplayer.Shared.Math;
 using GTARL.models;
 using System;
@@ -96,26 +97,34 @@ public class Main : Script
         return result;
     }
 
-    private void API_onEntityEnterColShape(ColShape colshape, GrandTheftMultiplayer.Shared.NetHandle entity)
+    private void API_onEntityEnterColShape(ColShape colshape, NetHandle entity)
     {
-        if (eggs.Contains(colshape))
+        try
         {
-            try
-            {
+           
+            if (eggs.Contains(colshape))
+        {
+               
 
                 Client p = API.getPlayerFromHandle(entity);
+                if(p == null)
+                {
+                    return;
+                }
+               
                 int id = getEggID(colshape);
+               
                 p.setData("EGG", id);
-
+               
                 if (p.hasData("EDIT_EGG"))
                 {
-                    //API.consoleOutput("EDITMODE");
+                    
                     return;
                 }
                
                 //abfrage ob schon gefunden
                 Boolean found = hasFound(id, p);
-              
+                
                 if (found == false)
                 {
 
@@ -126,14 +135,16 @@ public class Main : Script
 
                     setFound(id, p);
                 }
+              
+
 
             }
-            catch (Exception)
-            {
 
-                throw;
-            }
+        }
+        catch (Exception)
+        {
 
+            API.consoleOutput("EOOR");
         }
     }
 
@@ -192,7 +203,7 @@ public class Main : Script
     public void createegg(Client sender)
     {
         Vector3 pos = sender.position;
-        pos.Add(new Vector3(0, 0, -0.7));
+        pos.Z += -0.7f;
         Vector3 rot = sender.rotation;
         sender.setData("EDIT_EGG", true);
         ColShape cs = API.createCylinderColShape(pos, 1.2f, 1);
@@ -283,53 +294,7 @@ public class Main : Script
         }
     }
 
-    [Command("rotateEgg")]
-    public void rotate(Client sender,int id,  float x, float y, float z)
-    {
-        
-
-        using (var db = new GTARlDb(ConnectionString))
-        {
-            EggModel e = db.Eggs.Single(p => p.EggId == id);
-            if (e == null)
-            {
-                sender.sendChatMessage("Ei nicht gefunden!");
-                return;
-            }
-            e.RotationX = x;
-            e.RotationY = y;
-            e.RotationZ = z;
-            db.SaveChanges();
-        }
-
-        ColShape cs = dic[id];
-        GrandTheftMultiplayer.Server.Elements.Object o = eggs2[eggs.IndexOf(cs)];
-        Vector3 pos = o.position;
-        Vector3 rot = new Vector3(x, y, z);
-        o.rotation = rot;
-        sender.sendChatMessage("Ei rotiert!");
-    }
+   
     
-    [Command("getEggPos")]
-    public void getEggPos(Client sender, int id)
-    {
-        using (var db = new GTARlDb(ConnectionString))
-        {
-            EggModel e = db.Eggs.Single(p => p.EggId == id);
-            if (e == null)
-            {
-                sender.sendChatMessage("Ei nicht gefunden!");
-                return;
-            }
-            sender.sendChatMessage("Position");
-            sender.sendChatMessage(e.PositionX.ToString());
-            sender.sendChatMessage(e.PositionY.ToString());
-            sender.sendChatMessage(e.PositionZ.ToString());
-            sender.sendChatMessage("Rotation");
-            sender.sendChatMessage(e.RotationX.ToString());
-            sender.sendChatMessage(e.RotationY.ToString());
-            sender.sendChatMessage(e.RotationZ.ToString());
-            
-        }
-    }
+    
 }
