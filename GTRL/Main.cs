@@ -178,6 +178,8 @@ public class Main : Script
         ColShape cs = dic[id];
         GrandTheftMultiplayer.Server.Elements.Object o = eggs2[eggs.IndexOf(cs)];
         Vector3 pos = o.position;
+            pos.Z += -0.15f;
+            o.position = pos;
         Vector3 rot = new Vector3(1000000, 1000000, 0);
         o.rotation = rot;
 
@@ -188,6 +190,7 @@ public class Main : Script
             e.RotationX = 1000000;
             e.RotationY = 1000000;
             e.RotationZ = 0;
+            e.PositionZ = pos.Z;
             db.SaveChanges();
         }
         }
