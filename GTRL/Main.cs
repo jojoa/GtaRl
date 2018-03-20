@@ -51,6 +51,10 @@ public class Main : Script
 
     private void loadEggs()
     {
+        eggs = new List<ColShape>();
+        dic = new Dictionary<int, ColShape>();
+       eggs2 = new List<GrandTheftMultiplayer.Server.Elements.Object>();
+
         using (var db = new GTARlDb(ConnectionString))
         {
             List<EggModel> leggs = db.Eggs.ToList<EggModel>();
@@ -100,20 +104,24 @@ public class Main : Script
             {
 
                 Client p = API.getPlayerFromHandle(entity);
+                int id = getEggID(colshape);
+                p.setData("EGG", id);
+
                 if (p.hasData("EDIT_EGG"))
                 {
+                    //API.consoleOutput("EDITMODE");
                     return;
                 }
-                int id = getEggID(colshape);
+               
                 //abfrage ob schon gefunden
                 Boolean found = hasFound(id, p);
-                p.setData("EGG", id);
+              
                 if (found == false)
                 {
 
                     p.sendChatMessage("Du hast ein Ei gefunden!");
 
-                    List<Client> players = API.getAllPlayers();
+                    
                     API.sendChatMessageToAll(p.name  + " hat ein Ei gefunden!");
 
                     setFound(id, p);
@@ -142,6 +150,9 @@ public class Main : Script
             API.deleteColShape(cs);
         }
 
+        
+
+
         loadEggs();
 
     }
@@ -149,22 +160,32 @@ public class Main : Script
 
     private void setFound(int id, Client player)
     {
+        try
+        {
+
+        
         ColShape cs = dic[id];
         GrandTheftMultiplayer.Server.Elements.Object o = eggs2[eggs.IndexOf(cs)];
         Vector3 pos = o.position;
-        Vector3 rot = new Vector3(0, 0, pos.Z);
+        Vector3 rot = new Vector3(1000000, 1000000, 0);
         o.rotation = rot;
 
         using (var db = new GTARlDb(ConnectionString))
         {
             EggModel e = db.Eggs.Single(p => p.EggId == id);
             e.User = player.socialClubName.ToLower();
-            e.RotationX = 0;
-            e.RotationY = 0;
-            e.RotationZ = pos.Z;
+            e.RotationX = 1000000;
+            e.RotationY = 1000000;
+            e.RotationZ = 0;
             db.SaveChanges();
         }
-       
+        }
+        catch (Exception)
+        {
+
+            API.consoleOutput("SETFOUND-ERROR");
+        }
+
     }
 
     [Command("createegg")]
@@ -201,9 +222,10 @@ public class Main : Script
     [Command("getEggID")]
     public void getID(Client sender)
     {
-        if (sender.hasData("Egg"))
+        if (sender.hasData("EGG"))
         {
-            sender.sendChatMessage(sender.getData("EGG"));
+            int msg = sender.getData("EGG");
+            sender.sendChatMessage(msg.ToString());
         } else
         {
             sender.sendChatMessage("Du stehtst bei keinem Ei");
