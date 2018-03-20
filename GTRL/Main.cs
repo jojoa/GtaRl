@@ -66,6 +66,7 @@ public class Main : Script
                 rot.Z = egg.RotationZ;
                 ColShape cs = API.createCylinderColShape(pos, 1.2f, 1);
                 cs.setData("ID", egg.EggId);
+                dic.Add(egg.EggId, cs);
                 eggs.Add(cs);
                 eggs2.Add(API.createObject(1803116220, pos, rot));
             }
@@ -192,6 +193,7 @@ public class Main : Script
             int id = e.EggId;
             API.sendChatMessageToPlayer(sender, "ID: " + id);
             cs.setData("ID", id);
+            dic.Add(id, cs);
             sender.sendChatMessage("Du hast ein Ei versteckt!");
         }
     }
